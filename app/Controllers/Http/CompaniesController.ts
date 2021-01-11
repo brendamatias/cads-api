@@ -1,24 +1,16 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { validateCnpj } from 'App/Services/Utils'
-import CompanyValidator from 'App/Validators/CompanyValidator'
-import Company from 'App/Models/Company'
+import mediator from 'App/Mediators/Companies'
 
 export default class CompaniesController {
   public async index({ request, response }: HttpContextContract) {
-    const { page, limit } = request.only(['page', 'limit'])
+    const { status, data } = await mediator.List(request.only(['page', 'limit']))
 
-    const companies = await Company.query().paginate(page, limit)
-
-    return companies
+    return response.status(status).send(data)
   }
 
   public async store({ request, response }: HttpContextContract) {
-    const data = await request.validate(CompanyValidator)
+    const { status, data } = await mediator.Store(request)
 
-    await validateCnpj(data.cnpj)
-
-    const company = await Company.create(data)
-
-    return response.status(201).send({ data: company })
+    return response.status(status).send(data)
   }
 }
