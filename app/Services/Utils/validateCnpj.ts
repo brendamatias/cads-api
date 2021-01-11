@@ -1,5 +1,6 @@
-export const validateCnpj = (cnpj: string) => {
-  console.log('aq')
+import CustomException from 'App/Exceptions/CustomException'
+
+function isValidCnpj(cnpj: string) {
   if (cnpj.length !== 14) return false
 
   const items = [...new Set(cnpj)]
@@ -29,5 +30,12 @@ export const validateCnpj = (cnpj: string) => {
   if (digit0 !== parseInt(digits[0], 10)) return false
 
   const digit1 = calc(13)
+
   return digit1 === parseInt(digits[1], 10)
+}
+
+export const validateCnpj = (cnpj: string) => {
+  if (!isValidCnpj(cnpj)) {
+    throw new CustomException('CNPJ_INVALID')
+  }
 }
