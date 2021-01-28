@@ -1,13 +1,20 @@
-const okPaginated = ({ total, perPage, currentPage, lastPage, rows }) => ({
+interface ISimplePaginatorContract<T = any> {
+  total: number
+  perPage: number
+  currentPage: number
+  lastPage: number
+  rows?: T[]
+}
+const okPaginated = (paginatorContract: ISimplePaginatorContract) => ({
   status: 200,
   data: {
     pagination: {
-      total,
-      perPage,
-      currentPage,
-      lastPage,
+      total: paginatorContract.total,
+      perPage: paginatorContract.perPage,
+      currentPage: paginatorContract.currentPage,
+      lastPage: paginatorContract.lastPage,
     },
-    data: rows,
+    data: paginatorContract.rows,
   },
 })
 
